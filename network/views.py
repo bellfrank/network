@@ -11,6 +11,18 @@ def index(request):
     return render(request, "network/index.html")
 
 
+def create(request):
+    #DEBUG
+    print("Inside Create")
+
+    if request.method == "POST":
+        pass
+
+
+    else:
+        return render(request, "network/create.html")
+
+
 def login_view(request):
     if request.method == "POST":
 
