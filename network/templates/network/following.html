@@ -1,0 +1,14 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+Followers:
+    {% for follower in followers %}
+        <li>{{follower}}</li>
+
+    {%endfor%}
+    <br>
+Following:
+    {% for follow in following %}
+        <li>{{follow}}</li>
+    {%endfor%}
+{% endblock %}
