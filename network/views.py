@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.views.generic.list import ListView
 
 from .models import User, Posts
 from django import forms
@@ -13,8 +15,14 @@ from django import forms
 def index(request):
     posts = Posts.objects.all()
 
+    # Set up Pagination
+    paginator = Paginator(posts, 10) # show 10 posts per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/index.html",{
         "posts":posts,
+        "page_obj":page_obj,
     })
 
 @login_required
@@ -80,15 +88,18 @@ def following(request):
 
     followers = User.objects.get(username=request.user).followers.all()
     
-    # this method required turning symmetry methods to false
     following = User.objects.get(username=request.user).followees.all()
-    # following = User.objects.get(username=request.user).following.all()
+    
+    # getting all the posts and in HTML using python filter the correct posts
+    posts = Posts.objects.all()
 
-   
     return render(request, "network/following.html",{
         "followers":followers,
         "following":following,
+        "posts":posts,
     })
+
+
 
 def login_view(request):
     if request.method == "POST":
@@ -144,6 +155,9 @@ def register(request):
 
 
 
+class PageList(ListView):
+    paginate_by = 10
+    model = Posts
 
 #FORMS
 class PostForm(forms.ModelForm):
