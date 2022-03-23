@@ -7,9 +7,15 @@
 <strong>{{number_posts}} </strong>posts<br>
 <strong>{{number_posts}} </strong>followers<br>
 <strong>{{number_posts}} </strong>following<br>
-<form action="{% url 'profile' user %}" method="post"> 
+<form action="{% url 'profile' name %}" method="post"> 
     {% csrf_token %}
+
+    {% if follow %}
+    <button type="submit" class="btn btn-danger btn-sm">Unfollow</button>
+    {% else %}
     <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+    {% endif %}
+
 </form>
   <!-- Follow and Unfollow Function -->
 <!-- {% if user.is_authenticated and status %} -->

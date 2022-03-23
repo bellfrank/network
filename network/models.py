@@ -6,16 +6,7 @@ from time import timezone
 
 class User(AbstractUser):
     followers = models.ManyToManyField('self', blank=True, related_name="followees", symmetrical=False)
-    # following = models.ManyToManyField('self', blank=True)
-
-# need additional modles to this file to represnt details about posts, likes, and followers.
-# class Following(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_following")
-#     following_id = models.IntegerField()
-
-# class Followers(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followers")
-#     followers_id = models.IntegerField()
+    
 
 class Posts(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_post")

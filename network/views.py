@@ -18,33 +18,47 @@ def index(request):
     })
 
 @login_required
-def profile(request, user):
-    posts = User.objects.get(username=user).user_post.all()
+def profile(request, name):
+    # fetching the profile users posts
+    posts = User.objects.get(username=name).user_post.all()
     number_posts = len(posts)
-    print(request.user)
-    print(user)
-    if request.method == "POST":
-        following = User.objects.get(username=request.user).following.all()
-        print(following)
-        if(user in following):
-            print("true")
-        return render(request, "network/profile.html",{
-            "posts":posts,
-            "user":user,
-            "number_posts":number_posts,
-        })
+
+    # determining who the logged in user follows
+    following = User.objects.get(username=request.user).followees.all()
+    name1 = User.objects.get(username=name)
+    
+    # follow and unfollow button logic, if logged in user follows, then unfollow button is active
+    follow = False
+    if name1 in following:
+        follow = True
         
+    # user clicks follow/unfollow button
+    if request.method == "POST":
+        # getting the user object
+        user = User.objects.get(id=request.user.id)
+        id = User.objects.get(username=name).id
+        # person clicked unfollow, else clicked follow
+        if follow:
+            remove_follower = user.followees.remove(id)
+            follow = False
+        else:
+            add_follower = user.followees.add(id)
+            follow = True
+
+        return HttpResponseRedirect(reverse('profile', args=[str(name)]))
+        
+
     else:
         return render(request, "network/profile.html",{
             "posts":posts,
-            "user":user,
+            "name":name,
             "number_posts":number_posts,
+            "follow":follow,
         })
 
 @login_required
 def create(request):
     #DEBUG
-    print("Inside Create")
 
     if request.method == "POST":
         form = PostForm(request.POST)
