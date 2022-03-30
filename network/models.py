@@ -10,7 +10,7 @@ class User(AbstractUser):
 
 class Posts(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_post")
-    description = models.TextField(max_length=64)
+    description = models.TextField(max_length=500)
     time_posted = models.DateField(auto_now_add = True)
     status = models.BooleanField(default=True)
     # img = models.ImageField(upload_to='images/')
